@@ -1,6 +1,8 @@
 import { useEffect } from 'react';
 import './App.css';
+import Form from './Form/Form';
 import useTelegram from './hooks/useTelegram';
+
 const tg = window.Telegram.WebApp
 
 function App() {
@@ -11,8 +13,9 @@ function App() {
   },[])
   return (
     <div className="App">
-      <p>Hello {user}!</p>
-      <button onClick={onToggleButton}></button>
+      <p>Hello {user?.username}!</p>
+      <button onClick={onToggleButton}>toggle</button>
+      <Form />
     </div>
   );
 }
