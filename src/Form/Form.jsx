@@ -6,6 +6,7 @@ export default function Form() {
     const [text, setText] = useState('')
     const [image, setImage] = useState()
     const [isDone, setIsDone] = useState(false)
+    const { tg } = useTelegram()
 
     const handleImage = (e) => {
         e.preventDefault()
@@ -17,21 +18,22 @@ export default function Form() {
         data.readAsDataURL(e.target.files[0])
 
     }
-    const { tg } = useTelegram()
+    
 
-    const onSendData = useCallback(() => {
+    const sendToTelegram = useCallback(() => {
         const data = {
-            text
-        }
-        tg.sendData(JSON.stringify(data))
-    }, [text])
+            text,
+            image
+        };
+        tg.sendData(JSON.stringify(data));
+    }, [text, image, tg]);
 
     useEffect(() => {
-        tg.onEvent('mainButtonClicked', onSendData)
+        tg.onEvent('mainButtonClicked', sendToTelegram)
         return () => {
-            tg.offEvent('mainButtonClicked', onSendData)
+            tg.offEvent('mainButtonClicked', sendToTelegram)
         }
-    }, [onSendData])
+    }, [sendToTelegram])
 
     useEffect(() => {
         tg.MainButton.setParams({
@@ -40,12 +42,31 @@ export default function Form() {
     }, [])
 
     useEffect(() => {
-        if (!text) {
-            tg.MainButton.hide()
+        if (!text || !image) {
+            tg.MainButton.hide();
         } else {
-            tg.MainButton.show()
+            tg.MainButton.show();
         }
-    }, [text])
+    }, [text, image]);
+
+    // const onSendData = useCallback(() => {
+    //     const data = {
+    //         text
+    //     }
+    //     tg.sendData(JSON.stringify(data))
+    // }, [sendToTelegram])
+
+    
+
+    
+
+    // useEffect(() => {
+    //     if (!text) {
+    //         tg.MainButton.hide()
+    //     } else {
+    //         tg.MainButton.show()
+    //     }
+    // }, [text])
 
     // const onChangeText = (e) => {
     //     setText(e.target.value)
@@ -62,9 +83,9 @@ export default function Form() {
             <input type='submit' onClick={setIsDone} />
 
 
-            {
-                isDone && image && text && <Convertor photo={image} question={text} />
-            }
+            
+                {isDone && image && text && <Convertor photo={image} question={text} sendToTelegram={sendToTelegram} />}
+            
         </div>
     )
 }
