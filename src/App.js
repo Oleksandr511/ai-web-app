@@ -13,8 +13,9 @@ function App() {
   },[])
   return (
     <div className="App">
-      <p>Hello {user?.username}!</p>
-      <button onClick={onToggleButton}>toggle</button>
+      <h2>Hello !</h2>
+      <h3>Send your photo and question here</h3>
+      
       <Form />
     </div>
   );

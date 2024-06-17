@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import useTelegram from '../hooks/useTelegram'
 import Convertor from '../Convertor'
+import './Form.css'
 
 export default function Form() {
     const [text, setText] = useState('')
@@ -22,9 +23,7 @@ export default function Form() {
 
     const sendToTelegram = useCallback(async (response) => {
         console.log('we are sending data to tg: ');
-        // console.log(response.completion);
-        // console.log(typeof text)
-        // console.log(typeof response.completion)
+        
 
         try {
             const data = {
@@ -49,50 +48,24 @@ export default function Form() {
 
     useEffect(() => {
         tg.MainButton.setParams({
-            text: 'Send data'
+            text: 'Add photo & question, press "Submit" for answer.'
         })
     }, [])
 
     useEffect(() => {
         if (!text || !image) {
-            tg.MainButton.hide();
-        } else {
             tg.MainButton.show();
+        } else {
+            tg.MainButton.hide();
         }
     }, [text, image]);
 
-    // const onSendData = useCallback(() => {
-    //     const data = {
-    //         text
-    //     }
-    //     tg.sendData(JSON.stringify(data))
-    // }, [sendToTelegram])
-
-
-
-
-
-    // useEffect(() => {
-    //     if (!text) {
-    //         tg.MainButton.hide()
-    //     } else {
-    //         tg.MainButton.show()
-    //     }
-    // }, [text])
-
-    // const onChangeText = (e) => {
-    //     setText(e.target.value)
-    // }
     return (
-        <div>
-            {/* <input className={'input'}
-                type='text'
-                placeholder='Type here'
-                value={text}
-                onChange={onChangeText} /> */}
-            <input type='file' accept='image/*' onChange={handleImage} />
-            <input type='text' onChange={e => setText(e.target.value)} />
-            <input type='submit' onClick={setIsDone} />
+        <div className='form'>
+            
+            <input type='file' accept='image/*' onChange={handleImage} className='input_file'/>
+            <input type='text' placeholder='Type your question' onChange={e => setText(e.target.value)} className='input_question'/>
+            <input type='submit'  onClick={setIsDone} className='submit_button'/>
 
 
 
