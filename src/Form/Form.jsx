@@ -18,27 +18,27 @@ export default function Form() {
         data.readAsDataURL(e.target.files[0])
 
     }
-    
+
 
     const sendToTelegram = useCallback(async (response) => {
         console.log('we are sending data to tg: ');
         // console.log(response.completion);
         // console.log(typeof text)
         // console.log(typeof response.completion)
-    
+
         try {
             const data = {
                 response: response.completion,
                 text,
-                
+
             };
-    
+
             await tg.sendData(JSON.stringify(data));
             console.log('Data successfully sent to Telegram');
         } catch (error) {
             console.error('Error sending data to Telegram:', error);
         }
-    }, [ tg]);
+    }, [ text, tg]);
 
     useEffect(() => {
         tg.onEvent('mainButtonClicked', sendToTelegram)
@@ -68,9 +68,9 @@ export default function Form() {
     //     tg.sendData(JSON.stringify(data))
     // }, [sendToTelegram])
 
-    
 
-    
+
+
 
     // useEffect(() => {
     //     if (!text) {
@@ -95,9 +95,9 @@ export default function Form() {
             <input type='submit' onClick={setIsDone} />
 
 
-            
-                {isDone && image && text && (<Convertor photo={image} question={text} sendToTelegram={sendToTelegram} />)}
-            
+
+            {isDone && image && text && (<Convertor photo={image} question={text} sendToTelegram={sendToTelegram} />)}
+
         </div>
     )
 }
