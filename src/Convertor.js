@@ -90,7 +90,8 @@ function Convertor(props) {
                     {
                         role: 'user',
                         content: [
-                            { type: 'text', text: `${question}` },
+                            { type: 'text',
+                                 text: `${question}. Create a very short summary that uses 30 completion_tokens or less` },
                             {
                                 type: 'image_url',
                                 image_url: {
@@ -101,14 +102,22 @@ function Convertor(props) {
                     },
                 ],
             });
-            setCompletion(response.choices[0].message);
-            if (props.sendToTelegram) {
-                props.sendToTelegram(); // Ensure props.sendToTelegram is a function before calling
+            setCompletion(response.choices[0].message.content);
+            if (props.sendToTelegram && response.choices[0].message && completion) {
+                console.log('Sending data to td' )
+                console.log('1: ', completion.content)
+                // await props.sendToTelegram(completion.content); // Ensure props.sendToTelegram is a function before calling
             } // Call sendToTelegram from Form component when completion is set
         } catch (error) {
             console.error('Error fetching OpenAI completion:', error);
         }
     }
+
+    useEffect(() => {
+        if (completion && props.sendToTelegram) {
+            props.sendToTelegram({ completion });
+        }
+    }, [completion, props.sendToTelegram]);
 
     return (
         <div>
@@ -118,7 +127,8 @@ function Convertor(props) {
                     <div>
                         <h2>Response:</h2>
                         {completion && (
-                            <p>{completion.content}</p>
+                            //  props.sendToTelegram({completion}),
+                            <p>{completion}</p>
                         )}
                     </div>
                 </div>

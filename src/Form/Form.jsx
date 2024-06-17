@@ -20,20 +20,32 @@ export default function Form() {
     }
     
 
-    const sendToTelegram = useCallback(() => {
-        const data = {
-            text,
-            image
-        };
-        tg.sendData(JSON.stringify(data));
-    }, [text, image, tg]);
+    const sendToTelegram = useCallback(async (response) => {
+        console.log('we are sending data to tg: ');
+        // console.log(response.completion);
+        // console.log(typeof text)
+        // console.log(typeof response.completion)
+    
+        try {
+            const data = {
+                response: response.completion,
+                text,
+                
+            };
+    
+            await tg.sendData(JSON.stringify(data));
+            console.log('Data successfully sent to Telegram');
+        } catch (error) {
+            console.error('Error sending data to Telegram:', error);
+        }
+    }, [ tg]);
 
     useEffect(() => {
         tg.onEvent('mainButtonClicked', sendToTelegram)
         return () => {
             tg.offEvent('mainButtonClicked', sendToTelegram)
         }
-    }, [sendToTelegram])
+    }, [sendToTelegram, tg])
 
     useEffect(() => {
         tg.MainButton.setParams({
@@ -84,7 +96,7 @@ export default function Form() {
 
 
             
-                {isDone && image && text && <Convertor photo={image} question={text} sendToTelegram={sendToTelegram} />}
+                {isDone && image && text && (<Convertor photo={image} question={text} sendToTelegram={sendToTelegram} />)}
             
         </div>
     )
